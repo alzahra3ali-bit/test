@@ -42,7 +42,7 @@
 * `startLongitude`
 * `endLatitude`
 * `endLongitude`
-* `routeCoordinates`
+* `routeCoordinates` (GeoJSON)
 * `safetyTips`
 * `createdAt`
 
@@ -171,7 +171,7 @@ class Admin {
     +updateTrail(trailId: int, trailData: Trail)
     +deleteTrail(trailId: int)
     +uploadTrailImages(trailId: int, images: string)
-    +updateTrailRoute(trailId: int, routeCoordinates: string)
+    +updateTrailRoute(trailId: int, routeCoordinates: GeoJSON)
     +suspendUser(userId: int)
 }
 
@@ -188,7 +188,7 @@ class Trail {
     +decimal startLongitude
     +decimal endLatitude
     +decimal endLongitude
-    +string routeCoordinates
+    +GeoJSON routeCoordinates
     +string safetyTips
     +datetime createdAt
     +getDetails()
@@ -266,7 +266,7 @@ Admin --> Review : moderates
 
 # 3. Database Design
 
-The system uses a relational database with the following tables:
+The system uses a relational MySQL database with the following tables. Trail routes are stored as GeoJSON in a JSON column.
 
 ### Users
 
@@ -281,23 +281,23 @@ The system uses a relational database with the following tables:
 
 ### Trails
 
-| Field             | Type     | Key |
-| ----------------- | -------- | --- |
-| id                | INT      | PK  |
-| name              | VARCHAR  |     |
-| description       | TEXT     |     |
-| region            | VARCHAR  |     |
-| difficulty        | ENUM     |     |
-| distance          | DECIMAL  |     |
-| estimatedDuration | VARCHAR  |     |
-| images            | TEXT     |     |
-| startLatitude     | DECIMAL  |     |
-| startLongitude    | DECIMAL  |     |
-| endLatitude       | DECIMAL  |     |
-| endLongitude      | DECIMAL  |     |
-| routeCoordinates  | TEXT     |     |
-| safetyTips        | TEXT     |     |
-| createdAt         | DATETIME |     |
+| Field             | Type                  | Key |
+| ----------------- | --------------------- | --- |
+| id                | INT                   | PK  |
+| name              | VARCHAR               |     |
+| description       | TEXT                  |     |
+| region            | VARCHAR               |     |
+| difficulty        | ENUM                  |     |
+| distance          | DECIMAL               |     |
+| estimatedDuration | VARCHAR               |     |
+| images            | TEXT                  |     |
+| startLatitude     | DECIMAL               |     |
+| startLongitude    | DECIMAL               |     |
+| endLatitude       | DECIMAL               |     |
+| endLongitude      | DECIMAL               |     |
+| routeCoordinates  | GeoJSON (JSON column) |     |
+| safetyTips        | TEXT                  |     |
+| createdAt         | DATETIME              |     |
 
 ### Reviews
 
@@ -355,7 +355,7 @@ erDiagram
         DECIMAL startLongitude
         DECIMAL endLatitude
         DECIMAL endLongitude
-        TEXT routeCoordinates
+        JSON routeCoordinates "GeoJSON (JSON column)"
         TEXT safetyTips
         DATETIME createdAt
     }
@@ -418,7 +418,7 @@ The main front-end components are:
 * **Trail Map**
 
   * Displays the trail starting point.
-  * Displays the trail route with start and end points.
+  * Displays the trail route (GeoJSON) with start and end points.
   * Displays the user's current location on the trail map with periodic updates while hiking.
 
 * **Authentication**
@@ -447,8 +447,9 @@ The main front-end components are:
   * Allows registered users to mark trails as completed.
   * Displays the user's list of completed trails.
 
-* **Admin Dashboard**
+* **Admin Panel (In-App)**
 
+  * Available inside the same app and shown only to users with the admin role.
   * Allows admins to add, edit, and delete trails.
   * Allows admins to delete inappropriate reviews.
   * Allows admins to suspend users.
