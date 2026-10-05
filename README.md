@@ -11,23 +11,20 @@
 * `email`
 * `password`
 * `role`
-* `language`
-* `currentLocation`
 * `isSuspended`
 
 **Methods:**
 
-* `register()`
-* `login()`
+* `register(name, email, password)`
+* `login(email, password)`
 * `logout()`
-* `updateProfile()`
+* `updateProfile(name, email)`
 * `viewFavorites()`
-* `addFavorite()`
-* `removeFavorite()`
+* `addFavorite(trailId)`
+* `removeFavorite(trailId)`
 * `viewMyReviews()`
-* `markTrailAsCompleted()`
+* `markTrailAsCompleted(trailId)`
 * `viewCompletedTrails()`
-* `getCurrentLocation()`
 
 ### Trail
 
@@ -47,7 +44,6 @@
 * `endLongitude`
 * `routeCoordinates`
 * `safetyTips`
-* `status`
 * `createdAt`
 
 **Methods:**
@@ -56,7 +52,6 @@
 * `getLocation()`
 * `getRoute()`
 * `getSafetyTips()`
-* `isActive()`
 
 ### Review
 
@@ -71,11 +66,11 @@
 
 **Methods:**
 
-* `addReview()`
-* `updateReview()`
-* `deleteReview()`
-* `getReview()`
-* `validateRating()`
+* `addReview(userId, trailId, rating, comment)`
+* `updateReview(reviewId, rating, comment)`
+* `deleteReview(reviewId)`
+* `getReview(reviewId)`
+* `validateRating(rating)`
 
 ### Favorite
 
@@ -87,10 +82,10 @@
 
 **Methods:**
 
-* `addFavorite()`
-* `removeFavorite()`
-* `isFavorite()`
-* `getUserFavorites()`
+* `addFavorite(userId, trailId)`
+* `removeFavorite(userId, trailId)`
+* `isFavorite(userId, trailId)`
+* `getUserFavorites(userId)`
 
 ### CompletedTrail
 
@@ -102,10 +97,10 @@
 
 **Methods:**
 
-* `markAsCompleted()`
-* `removeCompletedTrail()`
-* `getCompletedTrails()`
-* `isCompleted()`
+* `markAsCompleted(userId, trailId)`
+* `removeCompletedTrail(userId, trailId)`
+* `getCompletedTrails(userId)`
+* `isCompleted(userId, trailId)`
 
 ### TrailService
 
@@ -115,9 +110,9 @@
 
 **Methods:**
 
-* `searchByName()`
-* `filterByRegion()`
-* `filterByDifficulty()`
+* `searchByName(name)`
+* `filterByRegion(region)`
+* `filterByDifficulty(difficulty)`
 * `clearFilters()`
 
 ### ReviewService
@@ -128,9 +123,9 @@
 
 **Methods:**
 
-* `getReviews()`
-* `calculateAverageRating()`
-* `deleteInappropriateReview()`
+* `getReviews(trailId)`
+* `calculateAverageRating(trailId)`
+* `deleteInappropriateReview(reviewId)`
 
 ### Admin
 
@@ -138,12 +133,12 @@ Admin inherits from the `User` class and provides additional administrative func
 
 **Methods:**
 
-* `addTrail()`
-* `updateTrail()`
-* `deleteTrail()`
-* `uploadTrailImages()`
-* `updateTrailRoute()`
-* `suspendUser()`
+* `addTrail(trailData)`
+* `updateTrail(trailId, trailData)`
+* `deleteTrail(trailId)`
+* `uploadTrailImages(trailId, images)`
+* `updateTrailRoute(trailId, routeCoordinates)`
+* `suspendUser(userId)`
 
 ---
 
@@ -158,29 +153,26 @@ class User {
     +string email
     +string password
     +Role role
-    +Language language
-    +Location currentLocation
     +boolean isSuspended
-    +register()
-    +login()
+    +register(name: string, email: string, password: string)
+    +login(email: string, password: string)
     +logout()
-    +updateProfile()
+    +updateProfile(name: string, email: string)
     +viewFavorites()
-    +addFavorite()
-    +removeFavorite()
+    +addFavorite(trailId: int)
+    +removeFavorite(trailId: int)
     +viewMyReviews()
-    +markTrailAsCompleted()
+    +markTrailAsCompleted(trailId: int)
     +viewCompletedTrails()
-    +getCurrentLocation()
 }
 
 class Admin {
-    +addTrail()
-    +updateTrail()
-    +deleteTrail()
-    +uploadTrailImages()
-    +updateTrailRoute()
-    +suspendUser()
+    +addTrail(trailData: Trail)
+    +updateTrail(trailId: int, trailData: Trail)
+    +deleteTrail(trailId: int)
+    +uploadTrailImages(trailId: int, images: string)
+    +updateTrailRoute(trailId: int, routeCoordinates: string)
+    +suspendUser(userId: int)
 }
 
 class Trail {
@@ -198,13 +190,11 @@ class Trail {
     +decimal endLongitude
     +string routeCoordinates
     +string safetyTips
-    +Status status
     +datetime createdAt
     +getDetails()
     +getLocation()
     +getRoute()
     +getSafetyTips()
-    +isActive()
 }
 
 class Review {
@@ -214,44 +204,44 @@ class Review {
     +int rating
     +string comment
     +datetime createdAt
-    +addReview()
-    +updateReview()
-    +deleteReview()
-    +getReview()
-    +validateRating()
+    +addReview(userId: int, trailId: int, rating: int, comment: string)
+    +updateReview(reviewId: int, rating: int, comment: string)
+    +deleteReview(reviewId: int)
+    +getReview(reviewId: int)
+    +validateRating(rating: int)
 }
 
 class Favorite {
     +int userId
     +int trailId
     +datetime createdAt
-    +addFavorite()
-    +removeFavorite()
-    +isFavorite()
-    +getUserFavorites()
+    +addFavorite(userId: int, trailId: int)
+    +removeFavorite(userId: int, trailId: int)
+    +isFavorite(userId: int, trailId: int)
+    +getUserFavorites(userId: int)
 }
 
 class CompletedTrail {
     +int userId
     +int trailId
     +datetime completedAt
-    +markAsCompleted()
-    +removeCompletedTrail()
-    +getCompletedTrails()
-    +isCompleted()
+    +markAsCompleted(userId: int, trailId: int)
+    +removeCompletedTrail(userId: int, trailId: int)
+    +getCompletedTrails(userId: int)
+    +isCompleted(userId: int, trailId: int)
 }
 
 class TrailService {
-    +searchByName()
-    +filterByRegion()
-    +filterByDifficulty()
+    +searchByName(name: string)
+    +filterByRegion(region: string)
+    +filterByDifficulty(difficulty: Difficulty)
     +clearFilters()
 }
 
 class ReviewService {
-    +getReviews()
-    +calculateAverageRating()
-    +deleteInappropriateReview()
+    +getReviews(trailId: int)
+    +calculateAverageRating(trailId: int)
+    +deleteInappropriateReview(reviewId: int)
 }
 
 User <|-- Admin
@@ -280,16 +270,14 @@ The system uses a relational database with the following tables:
 
 ### Users
 
-| Field           | Type    | Key    |
-| --------------- | ------- | ------ |
-| id              | INT     | PK     |
-| name            | VARCHAR |        |
-| email           | VARCHAR | UNIQUE |
-| password        | VARCHAR |        |
-| role            | ENUM    |        |
-| language        | ENUM    |        |
-| currentLocation | VARCHAR |        |
-| isSuspended     | BOOLEAN |        |
+| Field       | Type    | Key    |
+| ----------- | ------- | ------ |
+| id          | INT     | PK     |
+| name        | VARCHAR |        |
+| email       | VARCHAR | UNIQUE |
+| password    | VARCHAR |        |
+| role        | ENUM    |        |
+| isSuspended | BOOLEAN |        |
 
 ### Trails
 
@@ -309,7 +297,6 @@ The system uses a relational database with the following tables:
 | endLongitude      | DECIMAL  |     |
 | routeCoordinates  | TEXT     |     |
 | safetyTips        | TEXT     |     |
-| status            | ENUM     |     |
 | createdAt         | DATETIME |     |
 
 ### Reviews
@@ -352,8 +339,6 @@ erDiagram
         VARCHAR email UK
         VARCHAR password
         ENUM role
-        ENUM language
-        VARCHAR currentLocation
         BOOLEAN isSuspended
     }
 
@@ -372,7 +357,6 @@ erDiagram
         DECIMAL endLongitude
         TEXT routeCoordinates
         TEXT safetyTips
-        ENUM status
         DATETIME createdAt
     }
 
@@ -415,7 +399,7 @@ The main front-end components are:
 
 * **Home / Trail List**
 
-  * Displays available hiking trails.
+  * Displays available hiking trails to guests and registered users.
   * Provides access to search and filters.
 
 * **Search Bar**
@@ -427,20 +411,15 @@ The main front-end components are:
   * Filters trails by region.
   * Filters trails by difficulty.
 
-* **Saudi Map**
-
-  * Displays hiking trails across Saudi Arabia.
-  * Allows users to select a trail marker.
-  * Displays the trail starting point.
-  * Displays the user's current location with periodic updates.
-
 * **Trail Details**
 
   * Displays trail description, region, difficulty, distance, duration, images, and safety tips.
 
-* **Trail Route Map**
+* **Trail Map**
 
+  * Displays the trail starting point.
   * Displays the trail route with start and end points.
+  * Displays the user's current location on the trail map with periodic updates while hiking.
 
 * **Authentication**
 
@@ -448,6 +427,10 @@ The main front-end components are:
   * Login.
   * Logout.
   * Prompts guests to sign up when they try to save, rate, or review a trail.
+
+* **Profile**
+
+  * Allows registered users to edit their account information.
 
 * **Favorites**
 
@@ -459,4 +442,13 @@ The main front-end components are:
   * Allows registered users to submit ratings and comments.
   * Allows users to edit or delete their own reviews.
 
-* **Completed Trails*
+* **Completed Trails**
+
+  * Allows registered users to mark trails as completed.
+  * Displays the user's list of completed trails.
+
+* **Admin Dashboard**
+
+  * Allows admins to add, edit, and delete trails.
+  * Allows admins to delete inappropriate reviews.
+  * Allows admins to suspend users.
